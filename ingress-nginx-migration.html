@@ -732,7 +732,7 @@
                 <li><strong>Migrate service-by-service</strong> — Update each Ingress resource's <code>ingressClassName</code> to point to the new controller. Convert annotations as described in the Reference Guide, validate routing and TLS behavior, and promote to production before moving on to the next service.</li>
                 <li><strong>Decommission</strong> — After all workloads have been migrated and validated, remove the community controller deployment, its <code>IngressClass</code>, and any unused ConfigMaps.</li>
             </ol>
-            <div class="info-box tip"><strong>Tip:</strong> Use the <a href="#yaml-analyzer">Ingress NGINX Config Analyzer</a> tab to process each Ingress manifest during step 2. It will flag unsupported annotations and generate the equivalent F5 NGINX Ingress Controller configuration.</div>
+            <div class="info-box tip"><strong>Tip:</strong> Use the <a href="#analyzer" onclick="showPage('analyzer'); return false;">Ingress NGINX Config Analyzer</a> tab to process each Ingress manifest during step 2. It will flag unsupported annotations and generate the equivalent F5 NGINX Ingress Controller configuration.</div>
         </section>
 
         <!-- Resources -->
@@ -7210,6 +7210,9 @@ data:
                 }, { rootMargin: '-52px 0px -60% 0px', threshold: 0 });
                 sections.forEach(function(s) { observer.observe(s.el); });
             }
+
+            // Expose showPage globally so inline links and other scripts can call it
+            window.showPage = showPage;
 
             // Restore page from URL hash on load
             var hash = location.hash.replace('#', '');
