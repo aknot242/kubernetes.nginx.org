@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="NGINX on Kubernetes — official NGINX Ingress Controller, NGINX Gateway Fabric, migration tools, and ingress2gateway resources.">
     <meta name="author" content="F5, Inc.">
+    <link rel="canonical" href="https://kubernetes.nginx.org/">
+    <meta property="og:title" content="NGINX on Kubernetes">
+    <meta property="og:description" content="NGINX on Kubernetes — official NGINX Ingress Controller, NGINX Gateway Fabric, migration tools, and ingress2gateway resources.">
+    <meta property="og:url" content="https://kubernetes.nginx.org/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>NGINX on Kubernetes</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='53' height='60' viewBox='0 0 53 60'%3E%3Cg transform='translate(-7.198 -0.359)'%3E%3Cpath fill='%23009639' d='M7.606,45.181a3.019,3.019,0,0,0,1.134,1.126L31.942,59.702a3.044,3.044,0,0,0,3.084,0L58.229,46.306a3.043,3.043,0,0,0,1.541-2.67V16.846a3.044,3.044,0,0,0-1.542-2.67L35.025,0.779a3.04,3.04,0,0,0-3.082,0L8.741,14.175a3.042,3.042,0,0,0-1.543,2.67V43.637a3.025,3.025,0,0,0,.407,1.544'/%3E%3Cpath fill='%23fff' d='M26.055,40.439a2.984,2.984,0,0,1-5.968,0l.003-20.483a3.111,3.111,0,0,1,3.388-2.899,5.306,5.306,0,0,1,4.067,1.819l.902,1.079L40.914,34.874V20.041a2.984,2.984,0,1,1,5.968,0l-.004,20.481a3.111,3.111,0,0,1-3.388,2.899,5.303,5.303,0,0,1-4.067-1.819L26.054,25.606V40.44Z'/%3E%3C/g%3E%3C/svg%3E">
     <style>
@@ -60,7 +66,7 @@
         /* ── Top Bar ── */
         .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 200; transition: background 0.3s, border-color 0.3s; }
         .topbar-left { display: flex; align-items: center; gap: 16px; }
-        .menu-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; cursor: pointer; color: var(--text); font-size: 1.1rem; transition: all 0.2s; }
+        .menu-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; cursor: pointer; color: var(--text); font-size: 1.1rem; transition: background 0.2s, border-color 0.2s; min-width: 44px; min-height: 44px; }
         .menu-toggle:hover { background: var(--bg); }
         .menu-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .mobile-breadcrumb { display: none; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
@@ -70,11 +76,11 @@
         .topbar-brand span { font-weight: 700; font-size: 1rem; }
         .topbar-brand .sub { font-weight: 400; color: var(--text-secondary); }
         .topbar-right { display: flex; align-items: center; gap: 6px; }
-        .topbar-link { color: var(--text-secondary); text-decoration: none; font-size: 0.83rem; padding: 5px 10px; border-radius: 6px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .topbar-link { color: var(--text-secondary); text-decoration: none; font-size: 0.83rem; padding: 5px 10px; border-radius: 6px; transition: background 0.2s, color 0.2s; display: inline-flex; align-items: center; gap: 6px; min-width: 44px; min-height: 44px; justify-content: center; }
         .topbar-link:hover { background: var(--bg); color: var(--text); }
         .topbar-link:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .topbar-link svg { width: 18px; height: 18px; flex-shrink: 0; }
-        .dark-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; cursor: pointer; color: var(--text); font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .dark-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; cursor: pointer; color: var(--text); font-size: 0.95rem; font-family: var(--font); transition: background 0.2s, border-color 0.2s; display: inline-flex; align-items: center; gap: 5px; min-width: 44px; min-height: 44px; justify-content: center; }
         .dark-toggle:hover { background: var(--bg); }
         .dark-toggle:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .dark-toggle svg { width: 16px; height: 16px; }
@@ -92,6 +98,12 @@
         body.has-banner .topbar { top: 35px; }
         body.has-banner .layout { margin-top: 87px; min-height: calc(100vh - 87px); }
         body.has-banner .sidebar { top: 87px; }
+        @media (max-width: 600px) {
+            .event-banner { font-size: 0.72rem; padding: 6px 12px; }
+            body.has-banner .topbar { top: 50px; }
+            body.has-banner .layout { margin-top: 102px; min-height: calc(100vh - 102px); }
+            body.has-banner .sidebar { top: 102px; }
+        }
 
         /* ── Layout ── */
         .layout { display: flex; margin-top: 52px; min-height: calc(100vh - 52px); }
@@ -106,7 +118,7 @@
         .sidebar-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-secondary); padding: 8px 12px; }
         .sidebar-nav { list-style: none; }
         .sidebar-nav li { margin: 2px 0; }
-        .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.88rem; font-weight: 500; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: var(--font); }
+        .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-secondary); font-size: 0.88rem; font-weight: 500; transition: background 0.2s, color 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: var(--font); }
         .sidebar-link:hover { background: var(--bg); color: var(--text); }
         .sidebar-link:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; border-radius: 8px; }
         .sidebar-link.active { background: var(--bg); color: var(--text); font-weight: 600; }
@@ -123,7 +135,7 @@
         .sidebar-divider { height: 1px; background: var(--border); margin: 12px 16px; }
 
         .sidebar-ext-links { padding: 0 16px; }
-        .sidebar-ext { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.82rem; transition: all 0.2s; }
+        .sidebar-ext { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 0.82rem; transition: background 0.2s, color 0.2s; }
         .sidebar-ext:link, .sidebar-ext:visited { color: var(--text); }
         .sidebar-ext:hover { background: var(--bg); color: var(--text); }
         .sidebar-ext:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; border-radius: 8px; }
@@ -147,7 +159,7 @@
         :is(html, body).dark-mode .page-hero.migration, :is(html, body).dark-mode .page-hero.i2g { background: linear-gradient(135deg, #0a1929, #0d1540); }
         :is(html, body).dark-mode .page-hero.blogs { background: linear-gradient(135deg, #0a1a1b, #0a1c1e); }
         :is(html, body).dark-mode .page-hero.videos { background: linear-gradient(135deg, #1f0a0a, #1e0a10); }
-        :is(html, body).dark-mode .page-hero::before { opacity: 0.08; }
+        :is(html, body).dark-mode .page-hero::before { opacity: 0.04; }
         .page-hero-content { position: relative; max-width: 900px; z-index: 2; }
         .page-hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; min-height: 28px; }
         .page-hero-badge.nic, .page-hero-badge.ngf { background: rgba(0,150,57,0.15); color: #005f23; }
@@ -166,13 +178,13 @@
         .page-body { padding: 0 48px 60px; max-width: 1000px; }
 
         /* ── Section Headings ── */
-        .section-heading { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; margin-top: 36px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+        .section-heading { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; margin-top: 36px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
         .section-heading:first-child { margin-top: 0; }
         .section-heading-plain { border: none; padding-bottom: 0; }
 
         /* ── Feature Grid ── */
         .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0 32px; }
-        .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: all 0.25s; }
+        .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; }
         .feature-card:hover { border-color: var(--text-secondary); transform: translateY(-2px); box-shadow: var(--shadow); }
         .feature-card .feature-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
         .feature-card h3 svg { flex-shrink: 0; opacity: 0.7; }
@@ -192,14 +204,14 @@
         .code-accent { background: rgba(0,114,176,0.1); color: var(--blue); }
 
         /* ── Copy Button ── */
-        .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #9ca3af; padding: 6px 12px; border-radius: 6px; font-size: 0.72rem; font-family: var(--font); cursor: pointer; transition: all 0.2s; z-index: 2; min-height: 28px; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #9ca3af; padding: 6px 12px; border-radius: 6px; font-size: 0.72rem; font-family: var(--font); cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; z-index: 2; min-height: 28px; }
         .copy-btn:hover { background: rgba(255,255,255,0.18); color: #d4d4d4; }
         .copy-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .copy-btn.copied { background: rgba(76,175,80,0.3); color: #66bb6a; border-color: rgba(76,175,80,0.4); }
 
         /* ── CTA Row ── */
         .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
-        .cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: background 0.2s, border-color 0.2s, color 0.2s; }
         .cta:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .cta-primary { color: #fff; }
         .cta-primary.nic, .cta-primary.ngf { background: var(--green-dark); }
@@ -288,7 +300,7 @@
 
         /* ── Project Cards (Home) ── */
         .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0 32px; }
-        .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; transition: all 0.25s; cursor: pointer; text-align: left; }
+        .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; cursor: pointer; text-align: left; }
         .project-card:hover { border-color: var(--text-secondary); transform: translateY(-2px); box-shadow: var(--shadow); }
         .project-card:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 10px; }
         .project-card-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
@@ -356,6 +368,7 @@
         <symbol id="icon-community" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></symbol>
         <symbol id="icon-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
     </svg>
+    <noscript><div style="background:#fff3e0;color:#bf4000;text-align:center;padding:12px;font-size:0.9rem;">This site requires JavaScript for navigation, dark mode, and version fetching.</div></noscript>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="sr-only" aria-live="polite" id="page-announce"></div>
 
@@ -377,8 +390,9 @@
             <span class="mobile-breadcrumb" id="mobileBreadcrumb">Home</span>
         </div>
         <div class="topbar-right">
-<a class="topbar-link" href="https://github.com/nginx/kubernetes.nginx.org" target="_blank" rel="noopener" aria-label="GitHub Repository">
+<a class="topbar-link" href="https://github.com/nginx/kubernetes.nginx.org" target="_blank" rel="noopener" aria-label="Contribute on GitHub">
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
+                Contribute
             </a>
             <button class="dark-toggle" id="darkToggle" aria-label="Switch to dark mode">
                 <svg aria-hidden="true" class="dark-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -411,7 +425,7 @@
                         <span class="dot"></span>
                         <span class="sidebar-link-text">
                             <span class="sidebar-link-name">NGINX Ingress Controller</span>
-                            <span class="sidebar-link-desc"><span data-version="nic.release">v5.3.4</span> &middot; Ingress API</span>
+                            <span class="sidebar-link-desc"><span data-version="nic.release">v5.4.0</span> &middot; Ingress API</span>
                         </span>
                     </button></li>
                     <li><button class="sidebar-link" data-product="nginx-gateway-fabric">
@@ -517,36 +531,45 @@
                         </div>
                     </div>
 
-                    <h2 class="section-heading">Featured Video: CNCF On-Demand &mdash; Ingress-NGINX Is Retiring, NGINX Is Not</h2>
-                    <div class="video-embed">
-                        <iframe src="https://www.youtube-nocookie.com/embed/hA3bb_5jGJw" title="CNCF On-Demand: Ingress-NGINX Is Retiring, NGINX Is Not" style="border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                    </div>
-
-                    <h2 class="section-heading">Quick Links</h2>
-                    <div class="cta-row">
-                        <a class="cta cta-primary nic" href="https://docs.nginx.com/nginx-ingress-controller/" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book"/></svg>
-                            NGINX Ingress Controller Docs
+                    <h2 class="section-heading">Featured Content</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card" style="padding: 0; overflow: hidden;">
+                            <div class="video-embed" style="margin: 0; border-radius: 10px 10px 0 0;">
+                                <iframe src="https://www.youtube-nocookie.com/embed/hA3bb_5jGJw" title="CNCF On-Demand: Ingress-NGINX Is Retiring, NGINX Is Not" style="border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                            </div>
+                            <div style="padding: 16px;">
+                                <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Featured Video</h3>
+                                <p style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">CNCF On-Demand</p>
+                                <p>Ingress-NGINX Is Retiring, NGINX Is Not</p>
+                            </div>
+                        </div>
+                        <div class="feature-card" style="padding: 0; overflow: hidden;">
+                            <div class="video-embed" style="margin: 0; border-radius: 10px 10px 0 0;">
+                                <iframe src="https://www.youtube-nocookie.com/embed/gJrB3-w2_tM" title="Cutting Through the Kubernetes Confusion: NGINX Ingress, Gateway Fabric, and What's Next" style="border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                            </div>
+                            <div style="padding: 16px;">
+                                <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Featured Video</h3>
+                                <p style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">Cutting Through the Kubernetes Confusion</p>
+                                <p>NGINX Ingress, Gateway Fabric, and What's Next</p>
+                            </div>
+                        </div>
+                        <a class="feature-card" href="https://blog.nginx.org/blog/the-nginx-kubernetes-open-source-roadmap-first-half-of-2026" target="_blank" rel="noopener" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden;">
+                            <img src="https://nginxblog-8de1046ff5a84f2c-endpoint.azureedge.net/blobnginxbloga72cde487e/wp-content/uploads/2026/03/image-1.png" alt="NGINX Kubernetes Open Source Roadmap" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" loading="lazy">
+                            <div style="padding: 16px;">
+                                <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Featured Blog</h3>
+                                <p style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">The NGINX Kubernetes Open Source Roadmap: First Half of 2026</p>
+                                <p>What's coming next for NGINX Ingress Controller, NGINX Gateway Fabric, and the broader Kubernetes ecosystem.</p>
+                                <span style="display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 0.82rem; font-weight: 600; color: var(--green);">Read on blog.nginx.org &rarr;</span>
+                            </div>
                         </a>
-                        <a class="cta cta-primary ngf" href="https://docs.nginx.com/nginx-gateway-fabric/" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book"/></svg>
-                            NGINX Gateway Fabric Docs
-                        </a>
-                        <a class="cta cta-secondary" href="https://github.com/nginx/kubernetes-ingress" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
-                            NGINX Ingress Controller GitHub
-                        </a>
-                        <a class="cta cta-secondary" href="https://github.com/nginx/nginx-gateway-fabric" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
-                            NGINX Gateway Fabric GitHub
-                        </a>
-                        <a class="cta cta-secondary" href="https://community.nginx.org/c/projects/nginx-ingress-controller/24" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-community"/></svg>
-                            NGINX Ingress Controller Community
-                        </a>
-                        <a class="cta cta-secondary" href="https://community.nginx.org/c/projects/nginx-gateway-fabric/25" target="_blank" rel="noopener">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-community"/></svg>
-                            NGINX Gateway Fabric Community
+                        <a class="feature-card" href="https://blog.nginx.org/blog/nginx-ingress-controller-v5-4-0-making-migration-easier-than-ever" target="_blank" rel="noopener" style="text-decoration: none; color: inherit; padding: 0; overflow: hidden;">
+                            <img src="https://nginxblog-8de1046ff5a84f2c-endpoint.azureedge.net/blobnginxbloga72cde487e/wp-content/uploads/2025/03/K8s-blog2.png" alt="NGINX Ingress Controller v5.4.0" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;" loading="lazy">
+                            <div style="padding: 16px;">
+                                <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Featured Blog</h3>
+                                <p style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">NGINX Ingress Controller v5.4.0: Making Migration Easier Than Ever</p>
+                                <p>New features designed to simplify migration from Ingress-NGINX, including CORS support, configuration validation, and expanded annotation compatibility.</p>
+                                <span style="display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 0.82rem; font-weight: 600; color: var(--green);">Read on blog.nginx.org &rarr;</span>
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -561,7 +584,7 @@
                         <span class="page-hero-badge nic">
                             <svg aria-hidden="true" width="16" height="16" viewBox="34 5 36 48" fill="none"><path fill="#009639" d="M35.31,40.15c.21.37.52.66.86.86l17.65,10.19c.34.2.75.32,1.17.32s.83-.12,1.17-.32l17.65-10.19c.35-.2.65-.48.86-.86.21-.37.31-.78.31-1.18v-20.38c0-.4-.1-.81-.31-1.18-.21-.37-.52-.66-.86-.86l-17.65-10.19c-.34-.2-.74-.32-1.17-.32s-.83.12-1.17.32l-17.65,10.19c-.35.2-.65.49-.86.86-.21.37-.31.78-.31,1.18v20.38c0,.4.1.8.31,1.18"/><path fill="#fff" d="M56.79,36.68h-13.66c-.37,0-.67-.3-.67-.67v-13.66c0-.37.3-.67.67-.67h13.66c.37,0,.67.3.67.67v13.66c0,.37-.3.67-.67.67Z"/><path fill="#fff" d="M67,22.69h-4.08c-.25,0-.46-.21-.46-.46v-4.08c0-.25.21-.46.46-.46h4.08c.25,0,.46.21.46.46v4.08c0,.25-.21.46-.46.46Z"/><path fill="#fff" d="M67,31.68h-4.08c-.25,0-.46-.21-.46-.46v-4.08c0-.25.21-.46.46-.46h4.08c.25,0,.46.21.46.46v4.08c0,.25-.21.46-.46.46Z"/><path fill="#fff" d="M67.08,39.88h-4.08c-.25,0-.46-.21-.46-.46v-4.08c0-.25.21-.46.46-.46h4.08c.25,0,.46.21.46.46v4.08c0,.25-.21.46-.46.46Z"/><polygon fill="#fff" points="64.95 29.68 48.15 29.66 64.7 19.76 65.21 20.62 51.76 28.67 64.96 28.68 64.95 29.68"/><rect fill="#fff" x="57" y="24.68" width="1" height="17.18" transform="translate(.78 67.86) rotate(-61.43)"/></svg>
                             Ingress Controller
-                            <a class="hero-version" data-version="nic.release" href="https://github.com/nginx/kubernetes-ingress/releases/tag/v5.3.4" target="_blank" rel="noopener">v5.3.4</a>
+                            <a class="hero-version" data-version="nic.release" href="https://github.com/nginx/kubernetes-ingress/releases/tag/v5.4.0" target="_blank" rel="noopener">v5.4.0</a>
                         </span>
                         <h1>NGINX Ingress Controller</h1>
                         <p>Production-grade Ingress controller built on NGINX. Advanced traffic management, TLS termination, VirtualServer CRDs, and full observability for Kubernetes.</p>
@@ -623,11 +646,11 @@
                         <div class="details-grid">
                             <div class="detail-item">
                                 <span class="detail-label">Latest Version</span>
-                                <span class="version-pill nic"><a data-version="nic.release" href="https://github.com/nginx/kubernetes-ingress/releases/latest" target="_blank" rel="noopener">v5.3.4</a></span>
+                                <span class="version-pill nic"><a data-version="nic.release" href="https://github.com/nginx/kubernetes-ingress/releases/latest" target="_blank" rel="noopener">v5.4.0</a></span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Latest Helm Chart</span>
-                                <span class="version-pill nic"><a data-version="nic.helm" href="https://github.com/nginx/kubernetes-ingress/tree/main/charts/nginx-ingress" target="_blank" rel="noopener">v2.4.4</a></span>
+                                <span class="version-pill nic"><a data-version="nic.helm" href="https://github.com/nginx/kubernetes-ingress/tree/main/charts/nginx-ingress" target="_blank" rel="noopener">v2.5.0</a></span>
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">Custom Resources</span>
@@ -666,7 +689,7 @@
                         <div class="code-block"><button class="copy-btn" aria-label="Copy NIC install command">Copy</button><code><span class="comment"># Install via Helm (OCI registry)</span>
 <span class="cmd">helm</span> install nginx-ingress \
   oci://ghcr.io/nginx/charts/nginx-ingress \
-  <span class="flag">--version</span> <span class="str" data-version="nic.helm" data-version-format="bare">2.4.4</span> \
+  <span class="flag">--version</span> <span class="str" data-version="nic.helm" data-version-format="bare">2.5.0</span> \
   <span class="flag">--namespace</span> nginx-ingress <span class="flag">--create-namespace</span></code></div>
                     </div>
 
@@ -816,13 +839,13 @@
                             Migration Tool
                         </span>
                         <h1>Ingress-NGINX to NGINX Ingress Controller Migration Tool</h1>
-                        <p>Migrate from the community Ingress-NGINX controller to the Official NGINX Ingress Controller. Interactive YAML analysis, 130+ annotation mappings, and CRD migration examples.</p>
+                        <p>Migrate from the community Ingress-NGINX controller to the NGINX Ingress Controller. Interactive YAML analysis, 130+ annotation mappings, and CRD migration examples.</p>
                     </div>
                 </div>
                 <div class="page-body">
                     <div class="cta-row">
                         <a class="cta cta-primary migration" href="ingress-nginx-migration.html">
-                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
                             Migration Tool
                         </a>
                     </div>
@@ -834,7 +857,7 @@
                         </div>
                         <div class="feature-card">
                             <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> 130+ Annotation Mappings</h3>
-                            <p>Complete mapping table with community annotations, their Official equivalents, side-by-side YAML examples, and searchable filters.</p>
+                            <p>Complete mapping table with community annotations, their NGINX Ingress Controller equivalents, side-by-side YAML examples, and searchable filters.</p>
                         </div>
                         <div class="feature-card">
                             <h3 class="feature-title"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> CRD Migration Examples</h3>
@@ -888,7 +911,7 @@
                         <span class="page-hero-badge i2g">
                             <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
                             Conversion Tool
-                            <a class="hero-version" data-version="i2g.release" href="https://github.com/nginx/ingress2gateway/releases/tag/v0.5.0" target="_blank" rel="noopener">v0.5.0</a>
+                            <a class="hero-version" data-version="i2g.release" href="https://github.com/kubernetes-sigs/ingress2gateway/releases/tag/v0.5.0" target="_blank" rel="noopener">v0.5.0</a>
                         </span>
                         <h1>ingress2gateway</h1>
                         <p>Convert Ingress resources to Gateway API resources using the official NGINX provider. Automate your migration from Ingress to the Kubernetes Gateway API.</p>
@@ -985,7 +1008,7 @@
 
         /* ── Auto-Fetch Versions ── */
         var VERSION_CONFIG = {
-            nic: { repo: 'nginx/kubernetes-ingress',        fallback: { release: 'v5.3.4', helm: 'v2.4.4' } },
+            nic: { repo: 'nginx/kubernetes-ingress',        fallback: { release: 'v5.4.0', helm: 'v2.5.0' } },
             ngf: { repo: 'nginx/nginx-gateway-fabric',      fallback: { release: 'v2.4.2', helm: 'v2.4.2' } },
             i2g: { repo: 'kubernetes-sigs/ingress2gateway',  fallback: { release: 'v0.5.0' } }
         };
@@ -1043,7 +1066,7 @@
             function settle() {
                 pending--;
                 if (pending <= 0) {
-                    if (allSucceeded) writeVersionCache(data);
+                    writeVersionCache(data);
                     applyVersions(data);
                 }
             }
@@ -1156,7 +1179,7 @@
 
             // Update URL hash
             if (pushHash) {
-                history.replaceState(null, '', '#' + id);
+                history.pushState(null, '', '#' + id);
             }
 
             // Update mobile breadcrumb
@@ -1252,14 +1275,21 @@
         }
 
         window.addEventListener('hashchange', handleHash);
+        window.addEventListener('popstate', handleHash);
 
         /* ── Event Listeners ── */
         document.addEventListener('DOMContentLoaded', function() {
             initDarkMode();
 
-            // Event banner
-            if (document.getElementById('eventBanner')) {
-                document.body.classList.add('has-banner');
+            // Event banner (auto-hide after event ends)
+            var banner = document.getElementById('eventBanner');
+            if (banner) {
+                var eventEnd = new Date('2026-03-27T00:00:00Z');
+                if (new Date() < eventEnd) {
+                    document.body.classList.add('has-banner');
+                } else {
+                    banner.style.display = 'none';
+                }
             }
 
             // Dark mode toggle
