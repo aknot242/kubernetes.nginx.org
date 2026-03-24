@@ -29,9 +29,25 @@ Project characteristics:
 ### Migration tool (`ingress-nginx-migration.html`)
 
 - The live migration tool is `ingress-nginx-migration.html`, linked from the landing page via FQDN (`https://kubernetes.nginx.org/ingress-nginx-migration.html`).
-- For major iterations, create a versioned working file (e.g., `nginx-ingress-migration-guide-v13.html`) rather than editing the live file directly.
-- The versioned file is only promoted to live when finalized.
-- Each new version starts as a copy of the previous version's file.
+
+#### Migration tool ordering and structure rules
+
+- **Annotation mapping rows** within each category table must be sorted alphabetically by the community annotation name (left column).
+- **"No direct equivalent" rows** (NIC-only annotations) go at the end of their category table, after all community-to-NIC mappings.
+- **NIC-only annotations must not be bundled** into community mapping rows. If an NIC annotation has no community equivalent, it gets its own "No direct equivalent" row — never grouped into an existing row that maps community annotations.
+- **Within a single row**, when multiple annotations are listed on either side, they should be in alphabetical order.
+
+## Shared UI Elements
+
+The following elements are duplicated across `index.html` and `ingress-nginx-migration.html` and must be kept in sync when either is updated:
+
+- **Event banner** (Announcements) — the green fixed banner at the top of the page, including its CSS (`.event-banner`, `.has-banner` offsets) and JS init
+- **Top bar** — the NGINX logo, GitHub link, and dark mode toggle
+- **Sidebar external links** — GitHub, Documentation, Blog, YouTube, Community links at the bottom of the sidebar
+- **Sidebar copyright** — footer text in the sidebar
+- **Dark mode styles** — variable overrides, sidebar link/ext colors. Dark mode link colors (`a:link`, `a:visited`) must be scoped to the content area (`.page-body` in index.html, `.main-inner` in the migration tool) — never applied globally, or they will override topbar/sidebar link colors.
+
+When changing any of these, update both files.
 
 ## Hosting
 
@@ -45,7 +61,7 @@ Project characteristics:
 - **Gateway API**: The standard Kubernetes API for traffic management; NGINX Gateway Fabric is the NGINX implementation
 - **Annotation prefixes**: Community uses `nginx.ingress.kubernetes.io/`, NGINX Ingress Controller uses `nginx.org/` (OSS) or `nginx.com/` (Plus)
 - **CRDs**: NGINX Ingress Controller supports VirtualServer, VirtualServerRoute, Policy, TransportServer, GlobalConfiguration
-- **NGINX Plus**: Only the NGINX Ingress Controller supports Plus features (JWT, OIDC, WAF, session affinity)
+- **NGINX Plus**: Only the NGINX Ingress Controller supports Plus features (JWT, OIDC, WAF).
 - **Naming**: Use "NGINX Ingress Controller" (not "Official NGINX Ingress Controller" or "NGINX Inc."). The community controller is referred to as the "community controller" or by its repo name `kubernetes/ingress-nginx`.
 
 ## Research Resources
@@ -84,3 +100,13 @@ When verifying information, use GitHub MCP tools to fetch from these authoritati
 **Migration guide**: https://docs.nginx.com/nginx-ingress-controller/install/migrate-ingress-nginx
 
 Prefer GitHub MCP tools over WebFetch for documentation sites.
+
+## Version Accuracy
+
+**Critical rule:** Every annotation, ConfigMap key, CRD field, or feature documented in the migration tool MUST exist in the version referenced by the tool's "Version Reference" banner. Before adding any NIC feature to the migration tool:
+
+1. Check the version stated in the tool's Version Reference (e.g., "v5.4.0").
+2. Verify the feature exists in that released version — use `mcp__github__get_file_contents` against the corresponding tag (e.g., `v5.4.0`) to confirm annotations/CRD fields exist in source code or docs.
+3. Never document unreleased features, features from `main` branch that haven't been tagged, or features from future versions.
+
+When bumping the referenced version, audit the release notes to identify genuinely new features and update accordingly — but do not pre-document features from versions that haven't shipped yet.
