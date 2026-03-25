@@ -451,7 +451,7 @@
                         <span class="dot"></span>
                         <span class="sidebar-link-text">
                             <span class="sidebar-link-name">ingress2gateway</span>
-                            <span class="sidebar-link-desc"><span data-version="i2g.release">v0.5.0</span> &middot; Ingress API &rarr; Gateway API</span>
+                            <span class="sidebar-link-desc"><span data-version="i2g.release">v1.0.0</span> &middot; Ingress API &rarr; Gateway API</span>
                         </span>
                     </button></li>
                 </ul>
@@ -911,7 +911,7 @@
                         <span class="page-hero-badge i2g">
                             <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
                             Conversion Tool
-                            <a class="hero-version" data-version="i2g.release" href="https://github.com/kubernetes-sigs/ingress2gateway/releases/tag/v0.5.0" target="_blank" rel="noopener">v0.5.0</a>
+                            <a class="hero-version" data-version="i2g.release" href="https://github.com/kubernetes-sigs/ingress2gateway/releases/tag/v1.0.0" target="_blank" rel="noopener">v1.0.0</a>
                         </span>
                         <h1>ingress2gateway</h1>
                         <p>Convert Ingress resources to Gateway API resources using the official NGINX provider. Automate your migration from Ingress to the Kubernetes Gateway API.</p>
@@ -960,7 +960,7 @@
                     <h2 class="section-heading">Installation</h2>
                     <div class="code-section code-section-flush">
                         <div class="code-block"><button class="copy-btn" aria-label="Copy ingress2gateway install command">Copy</button><code><span class="comment"># Install with Go</span>
-<span class="cmd">go</span> install github.com/kubernetes-sigs/ingress2gateway<span data-version="i2g.release" data-version-format="atv">@v0.5.0</span>
+<span class="cmd">go</span> install github.com/kubernetes-sigs/ingress2gateway<span data-version="i2g.release" data-version-format="atv">@v1.0.0</span>
 
 <span class="comment"># Or install with Homebrew (macOS / Linux)</span>
 <span class="cmd">brew</span> install ingress2gateway
@@ -1010,7 +1010,7 @@
         var VERSION_CONFIG = {
             nic: { repo: 'nginx/kubernetes-ingress',        fallback: { release: 'v5.4.0', helm: 'v2.5.0' } },
             ngf: { repo: 'nginx/nginx-gateway-fabric',      fallback: { release: 'v2.4.2', helm: 'v2.4.2' } },
-            i2g: { repo: 'kubernetes-sigs/ingress2gateway',  fallback: { release: 'v0.5.0' } }
+            i2g: { repo: 'kubernetes-sigs/ingress2gateway',  fallback: { release: 'v1.0.0' } }
         };
         var VERSION_CACHE_KEY = 'nginx_k8s_versions';
         var VERSION_CACHE_TTL = 3600000; // 1 hour
