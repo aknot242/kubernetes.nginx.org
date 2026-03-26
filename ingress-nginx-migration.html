@@ -6782,11 +6782,11 @@ data:
 
                 // Dual-approach note
                 var dualEntries = Array.from(seenEntries.values()).filter(function(e) { return e.mapping.dualApproach; });
-                if (dualEntries.length > 0) {
+                if (dualEntries.length > 0 && migration.crdResources.length > 0) {
                     var dualNote = document.createElement('div');
                     dualNote.className = 'analyzer-dual-note';
                     var crdStepNum = stepNum + (migration.configMapChanges.length > 0 ? 2 : 1);
-                    dualNote.textContent = 'Some annotations above also have a CRD-based approach shown in Step ' + (migration.crdResources.length > 0 ? crdStepNum : 'N/A') + ' below.';
+                    dualNote.textContent = 'Some annotations above also have a CRD-based approach shown in Step ' + crdStepNum + ' below.';
                     step1.appendChild(dualNote);
                 }
 
