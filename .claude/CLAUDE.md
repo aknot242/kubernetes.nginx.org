@@ -105,8 +105,26 @@ Prefer GitHub MCP tools over WebFetch for documentation sites.
 
 **Critical rule:** Every annotation, ConfigMap key, CRD field, or feature documented in the migration tool MUST exist in the version referenced by the tool's "Version Reference" banner. Before adding any NIC feature to the migration tool:
 
-1. Check the version stated in the tool's Version Reference (e.g., "v5.4.0").
-2. Verify the feature exists in that released version — use `mcp__github__get_file_contents` against the corresponding tag (e.g., `v5.4.0`) to confirm annotations/CRD fields exist in source code or docs.
+1. Check the version stated in the tool's Version Reference (e.g., "v5.4.1").
+2. Verify the feature exists in that released version — use `mcp__github__get_file_contents` against the corresponding tag (e.g., `v5.4.1`) to confirm annotations/CRD fields exist in source code or docs.
 3. Never document unreleased features, features from `main` branch that haven't been tagged, or features from future versions.
 
 When bumping the referenced version, audit the release notes to identify genuinely new features and update accordingly — but do not pre-document features from versions that haven't shipped yet.
+
+### Release update checklist
+
+When updating the sites for a new NIC release, update **all** of the following:
+
+**`index.html`:**
+
+- Version fallback text in `data-version="nic.release"` spans (sidebar, hero badge, Key Details)
+- Release tag link in the hero badge (`href`)
+- Helm chart version in `data-version="nic.helm"` spans and the Helm install command
+- JS `VERSION_CONFIG` fallback values for `nic.release` and `nic.helm`
+- **Compatibility table** in the NIC section — update NGINX OSS version (check `NGINX_OSS_VERSION` in `build/Dockerfile` at the release tag) and Kubernetes versions if changed
+
+**`ingress-nginx-migration.html`:**
+
+- Version Reference banners (3 instances across Getting Started, Annotations, and ConfigMap tabs)
+- CRD install URLs pointing to `raw.githubusercontent.com/.../deploy/crds.yaml`
+- Release tag links in Version Reference banners
